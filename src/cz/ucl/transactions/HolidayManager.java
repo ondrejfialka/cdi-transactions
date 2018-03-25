@@ -2,14 +2,15 @@ package cz.ucl.transactions;
 
 import java.io.Serializable;
 
-import javax.annotation.PostConstruct;
-import javax.enterprise.context.ApplicationScoped;
+import javax.annotation.Resource;
 import javax.enterprise.context.SessionScoped;
 import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.transaction.Status;
+import javax.transaction.TransactionSynchronizationRegistry;
 import javax.transaction.Transactional;
 
 import cz.ucl.fa.model.Customer;
@@ -21,6 +22,9 @@ public class HolidayManager implements Serializable {
 	@Produces
 	@PersistenceContext(unitName="SEM04")
 	private EntityManager entityManager;
+
+	@Resource
+	TransactionSynchronizationRegistry tsr;
 	
 	@Inject
 	private CustomerData customerData;
@@ -28,15 +32,15 @@ public class HolidayManager implements Serializable {
 	@Transactional(Transactional.TxType.REQUIRED)
 	public void addCustomer() {
 		addCustomer2();
-		System.out.println(entityManager.getTransaction().isActive());
-		
-	// exception causes the transaction to rollback	
+		System.out.println(tsr.getTransactionStatus() == Status.STATUS_ACTIVE);
+
+	// exception causes the transaction to rollback
 	//	throw new RuntimeException();
-	}	
-	
+	}
+
 	@Transactional(Transactional.TxType.SUPPORTS)
 	public void addCustomer2() {
-		System.out.println(entityManager.getTransaction().isActive());
+		System.out.println(tsr.getTransactionStatus() == Status.STATUS_ACTIVE);
 		Customer customer = customerData.getCustomer();
 		entityManager.persist(customer);
 	}	

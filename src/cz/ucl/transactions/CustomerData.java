@@ -4,8 +4,10 @@ import javax.enterprise.inject.Model;
 
 import cz.ucl.fa.model.Customer;
 
+import java.io.Serializable;
+
 @Model
-public class CustomerData {
+public class CustomerData implements Serializable {
 
 	private Customer customer = new Customer();
 
