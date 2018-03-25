@@ -34,6 +34,9 @@ public class HolidayManager implements Serializable {
 		addCustomer2();
 		System.out.println(tsr.getTransactionStatus() == Status.STATUS_ACTIVE);
 
+		//This prevents the transaction crom commiting
+	//	tsr.setRollbackOnly();
+
 	// exception causes the transaction to rollback
 	//	throw new RuntimeException();
 	}
